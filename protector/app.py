@@ -42,8 +42,6 @@ NAV_ITEMS = [
     ("ℹ️",  "About"),
 ]
 
-_DEV_PASSWORD = "maxtechfix2024"   # developer password to access Key Generator
-
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -463,38 +461,8 @@ class SoftwareProtectorApp(tk.Tk):
                size=11, color=C["muted"]).pack(anchor="w", pady=(4, 0))
         _divider(p).pack(fill="x", pady=(12, 20))
 
-        # Password gate
-        self._kg_unlocked = False
-        self._kg_gate = tk.Frame(p, bg=C["bg"])
-        self._kg_gate.pack(fill="both", expand=True)
         self._kg_main = tk.Frame(p, bg=C["bg"])
-
-        gate_card = _card(self._kg_gate)
-        gate_card.pack(expand=True)
-        gc = tk.Frame(gate_card, bg=C["panel"], padx=40, pady=36)
-        gc.pack()
-        _label(gc, "🔐", size=32, bg=C["panel"]).pack()
-        _label(gc, "Developer Access Required", size=14, weight="bold",
-               bg=C["panel"]).pack(pady=(8, 2))
-        _label(gc, "Enter the developer password to access the Key Generator.",
-               size=10, color=C["muted"], bg=C["panel"]).pack(pady=(0, 16))
-        pw_var = tk.StringVar()
-        pw_entry = _entry(gc, textvariable=pw_var, show="●", width=24)
-        pw_entry.pack(ipady=8, pady=(0, 10))
-        pw_err = tk.StringVar()
-        _label(gc, textvariable=pw_err, size=9, color=C["danger"],
-               bg=C["panel"]).pack()
-
-        def unlock():
-            if pw_var.get() == _DEV_PASSWORD:
-                self._kg_gate.pack_forget()
-                self._kg_main.pack(fill="both", expand=True)
-                self._kg_unlocked = True
-            else:
-                pw_err.set("❌  Incorrect password.")
-
-        pw_entry.bind("<Return>", lambda e: unlock())
-        _btn(gc, "Unlock", unlock).pack(pady=(8, 0))
+        self._kg_main.pack(fill="both", expand=True)
 
         # Main generator UI
         self._kg_build_main(self._kg_main)
@@ -737,7 +705,6 @@ class SoftwareProtectorApp(tk.Tk):
         ])
         section("🔑 Generating a License Key  (Developer workflow)", [
             "Click 'Key Generator' in the sidebar.",
-            "Enter the developer password (set in app.py — change it before distributing).",
             "Ask your customer for their Hardware ID (visible in the protected app or in this tool).",
             "Enter the customer's email address and Hardware ID in the form.",
             "Click 'Generate Key' to create a unique HMAC-SHA256 license key.",
@@ -760,7 +727,6 @@ class SoftwareProtectorApp(tk.Tk):
             "Distribute the .exe to customers — no Python installation required.",
         ])
         section("🔒 Security Tips", [
-            "Keep the developer password private — never share it with customers.",
             "The license key is bound to one Hardware ID; customers cannot share it.",
             "Trial and license data are XOR-encrypted on disk to prevent simple tampering.",
             "For maximum security, use PyArmor or Cython to obfuscate your .py before protecting.",

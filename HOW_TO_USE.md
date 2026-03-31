@@ -64,12 +64,11 @@ Dashboard · Protect File · Key Generator · Activate License · How to Use · 
 ### Step 3 — Generate a License Key  *(Developer)*
 
 1. Click **Key Generator** in the sidebar.  
-2. Enter the **developer password** (set in `_DEV_PASSWORD` inside `protector/app.py` — change it before distributing your tool).  
-3. Ask your customer for their **Hardware ID**  
+2. Ask your customer for their **Hardware ID**  
    (they see it in the protected app, or in Software Protector → Activate License).  
-4. Enter the customer's **email address** and **Hardware ID**.  
-5. Click **🔑 Generate Key**.  
-6. Copy the key and send it to the customer.
+3. Enter the customer's **email address** and **Hardware ID**.  
+4. Click **🔑 Generate Key**.  
+5. Copy the key and send it to the customer.
 
 ---
 
@@ -113,9 +112,6 @@ A: No. The key is bound to the Hardware ID of one specific machine.
 
 **Q: What happens when the trial expires?**  
 A: A dialog appears asking for a license key. The software does not run until a valid key is entered.
-
-**Q: How do I change the developer password?**  
-A: Edit `_DEV_PASSWORD` in `protector/app.py`. Use a strong, unique password before distributing your tool.
 
 **Q: Can I change the trial period?**  
 A: Yes — set the Trial Days value in the Protect File form (each protected app has its own timer).
