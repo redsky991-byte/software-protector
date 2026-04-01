@@ -17,6 +17,7 @@ _SP_LIC_FILE    = _os.path.join(_SP_DATA_DIR, f"{_SP_APP_ID}.lic")
 _SP_TR_FILE     = _os.path.join(_SP_DATA_DIR, f"{_SP_APP_ID}.tr")
 _SP_SECRET      = "MaxTechFix_License_Secret_ZulfiqarAli_2024"
 _SP_ENC_KEY     = _hl.sha256(b"MaxTechFix_SoftwareProtector_2024_ZulfiqarAli").digest()
+_SP_CONTACT     = "WhatsApp: 00923411337788  |  Email: redsky991@hotmail.com"
 
 # ── Crypto helpers ────────────────────────────────────────────────────────────
 def _sp_xor(d, k):
@@ -57,20 +58,131 @@ def _sp_valid(email, hwid, key):
     return _hmac.compare_digest(key.replace("-","").upper(), sig[:16].upper())
 
 # ── Trial / License GUI ───────────────────────────────────────────────────────
-def _sp_trial_notice(days_left):
+def _sp_trial_choice_dialog(days_left):
+    hwid = _sp_hwid()
+    result = [False]
     try:
         import tkinter as tk
-        from tkinter import messagebox
-        r = tk.Tk(); r.withdraw()
-        messagebox.showwarning(
-            f"⚠️ Trial – {_SP_APP_NAME}",
-            f"TRIAL VERSION  –  {days_left} of {_SP_TRIAL_DAYS} days remaining.\n\n"
-            f"Purchase a license at:\n  www.maxtechfix.com\n\n"
-            f"Your Hardware ID:\n  {_sp_hwid()}"
-        )
-        r.destroy()
+        import tkinter.font as tkfont
+
+        root = tk.Tk()
+        root.title(f"Trial Version — {_SP_APP_NAME}")
+        root.configure(bg="#0f172a")
+        root.geometry("520x400")
+        root.resizable(False, False)
+        root.eval("tk::PlaceWindow . center")
+
+        try:
+            f_title = tk.font.Font(family="Segoe UI", size=14, weight="bold")
+            f_label = tk.font.Font(family="Segoe UI", size=10)
+            f_mono  = tk.font.Font(family="Consolas",  size=10)
+        except Exception:
+            f_title = tkfont.Font(size=14, weight="bold")
+            f_label = tkfont.Font(size=10)
+            f_mono  = tkfont.Font(size=10)
+
+        choice_frm = tk.Frame(root, bg="#0f172a")
+        choice_frm.pack(fill="both", expand=True)
+
+        tk.Label(choice_frm,
+                 text=f"⏳ Trial Version  —  {days_left} of {_SP_TRIAL_DAYS} days remaining",
+                 font=f_title, bg="#0f172a", fg="#f59e0b").pack(pady=(28, 4))
+        tk.Label(choice_frm,
+                 text=f'You are running  "{_SP_APP_NAME}"  in trial mode.',
+                 font=f_label, bg="#0f172a", fg="#94a3b8").pack(pady=(0, 6))
+
+        frm_hw = tk.Frame(choice_frm, bg="#1e293b")
+        frm_hw.pack(fill="x", padx=36, pady=4)
+        tk.Label(frm_hw, text="Your Hardware ID:", font=f_label,
+                 bg="#1e293b", fg="#94a3b8").pack(anchor="w", padx=12, pady=(10, 0))
+        tk.Entry(frm_hw, textvariable=tk.StringVar(value=hwid), font=f_mono,
+                 bg="#0f172a", fg="#6366f1", relief="flat", state="readonly",
+                 readonlybackground="#0f172a", width=24).pack(padx=12, pady=(2, 10))
+
+        btn_frm = tk.Frame(choice_frm, bg="#0f172a")
+        btn_frm.pack(pady=20)
+
+        def run_trial():
+            result[0] = True
+            root.destroy()
+
+        def show_register():
+            choice_frm.pack_forget()
+            reg_frm.pack(fill="both", expand=True)
+            root.geometry("520x480")
+
+        tk.Button(btn_frm, text="▶  Run as Trial Version", font=f_label,
+                  bg="#f59e0b", fg="#ffffff", relief="flat", cursor="hand2",
+                  activebackground="#fbbf24", activeforeground="#ffffff",
+                  padx=20, pady=8, command=run_trial).pack(side="left", padx=8)
+        tk.Button(btn_frm, text="🔑  Register Full Version", font=f_label,
+                  bg="#6366f1", fg="#ffffff", relief="flat", cursor="hand2",
+                  activebackground="#818cf8", activeforeground="#ffffff",
+                  padx=20, pady=8, command=show_register).pack(side="left", padx=8)
+
+        tk.Label(choice_frm,
+                 text=f"To register:  {_SP_CONTACT}",
+                 font=f_label, bg="#0f172a", fg="#475569").pack(pady=(0, 10))
+
+        # Registration frame
+        reg_frm = tk.Frame(root, bg="#0f172a")
+        tk.Label(reg_frm, text="🔑 Register Full Version", font=f_title,
+                 bg="#0f172a", fg="#6366f1").pack(pady=(28, 4))
+        tk.Label(reg_frm, text=f'Activate  "{_SP_APP_NAME}"  with your license key.',
+                 font=f_label, bg="#0f172a", fg="#94a3b8").pack(pady=(0, 4))
+        tk.Label(reg_frm,
+                 text=f"Contact:  {_SP_CONTACT}",
+                 font=f_label, bg="#0f172a", fg="#f59e0b").pack(pady=(0, 8))
+
+        frm_form = tk.Frame(reg_frm, bg="#0f172a")
+        frm_form.pack(fill="x", padx=36, pady=4)
+        email_e = key_e = None
+        for txt in ("Email Address:", "License Key:"):
+            tk.Label(frm_form, text=txt, font=f_label,
+                     bg="#0f172a", fg="#94a3b8").pack(anchor="w", pady=(8, 2))
+            e = tk.Entry(frm_form, font=f_label, bg="#1e293b", fg="#f1f5f9",
+                         relief="flat", bd=4, insertbackground="#f1f5f9")
+            e.pack(fill="x", ipady=6)
+            if txt.startswith("Email"):
+                email_e = e
+            else:
+                key_e = e
+
+        sv = tk.StringVar()
+        tk.Label(reg_frm, textvariable=sv, font=f_label,
+                 bg="#0f172a", fg="#ef4444").pack(pady=(4, 0))
+
+        def activate():
+            em = email_e.get().strip()
+            k  = key_e.get().strip()
+            if not em or not k:
+                sv.set("Please fill in both fields.")
+                return
+            if _sp_valid(em, hwid, k):
+                _sp_write(_SP_LIC_FILE, {"email": em, "key": k})
+                result[0] = True
+                root.destroy()
+            else:
+                sv.set("❌  Invalid license key. Please check and try again.")
+
+        tk.Button(reg_frm, text="  Activate License  ", font=f_label,
+                  bg="#6366f1", fg="#ffffff", relief="flat", cursor="hand2",
+                  activebackground="#818cf8", activeforeground="#ffffff",
+                  command=activate).pack(pady=14)
+
+        def back_to_choice():
+            reg_frm.pack_forget()
+            choice_frm.pack(fill="both", expand=True)
+            root.geometry("520x400")
+
+        tk.Button(reg_frm, text="← Back", font=f_label, bg="#334155", fg="#94a3b8",
+                  relief="flat", cursor="hand2", activebackground="#475569",
+                  command=back_to_choice).pack(pady=(0, 10))
+
+        root.mainloop()
     except Exception:
         pass
+    return result[0]
 
 def _sp_expired_dialog():
     hwid = _sp_hwid()
@@ -150,7 +262,8 @@ def _sp_expired_dialog():
                         activebackground="#818cf8", activeforeground="#ffffff",
                         command=activate)
         btn.pack(pady=14)
-        tk.Label(root, text="Purchase a license at  www.maxtechfix.com",
+        tk.Label(root,
+                 text=f"To register:  {_SP_CONTACT}",
                  font=f_label, bg="#0f172a", fg="#475569").pack(pady=(0, 10))
 
         root.mainloop()
@@ -175,8 +288,7 @@ def _sp_check():
     days_left  = max(0, _SP_TRIAL_DAYS - days_used)
 
     if days_left > 0:
-        _sp_trial_notice(days_left)
-        return True
+        return _sp_trial_choice_dialog(days_left)
     return _sp_expired_dialog()
 
 if not _sp_check():

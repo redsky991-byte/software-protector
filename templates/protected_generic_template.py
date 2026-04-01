@@ -18,6 +18,7 @@ _SP_TR_FILE        = _os.path.join(_SP_DATA_DIR, f"{_SP_APP_ID}.tr")
 _SP_SECRET         = "MaxTechFix_License_Secret_ZulfiqarAli_2024"
 _SP_PROT_KEY       = _hl.sha256(b"MaxTechFix_SoftwareProtector_2024_ZulfiqarAli").digest()
 _SP_FILE_KEY       = _hl.sha256(_SP_ENC_KEY_STR.encode()).digest()
+_SP_CONTACT        = "WhatsApp: 00923411337788  |  Email: redsky991@hotmail.com"
 
 def _sp_xor(d, k):
     return bytes(b ^ k[i % len(k)] for i, b in enumerate(d))
@@ -88,14 +89,17 @@ def _sp_trial_choice_dialog(days_left):
                   bg="#6366f1", fg="#ffffff", relief="flat", cursor="hand2",
                   activebackground="#818cf8", activeforeground="#ffffff",
                   padx=20, pady=8, command=show_register).pack(side="left", padx=8)
-        tk.Label(choice_frm, text="Purchase a license at  www.maxtechfix.com",
+        tk.Label(choice_frm, text=f"To register:  {_SP_CONTACT}",
                  font=f_l, bg="#0f172a", fg="#475569").pack(pady=(0, 10))
 
         reg_frm = tk.Frame(root, bg="#0f172a")
         tk.Label(reg_frm, text="🔑 Register Full Version", font=f_t,
                  bg="#0f172a", fg="#6366f1").pack(pady=(28, 4))
         tk.Label(reg_frm, text=f'Activate  "{_SP_APP_NAME}"  with your license key.',
-                 font=f_l, bg="#0f172a", fg="#94a3b8").pack(pady=(0, 10))
+                 font=f_l, bg="#0f172a", fg="#94a3b8").pack(pady=(0, 4))
+        tk.Label(reg_frm,
+                 text=f"Contact:  {_SP_CONTACT}",
+                 font=f_l, bg="#0f172a", fg="#f59e0b").pack(pady=(0, 8))
         frm2 = tk.Frame(reg_frm, bg="#0f172a"); frm2.pack(fill="x", padx=36, pady=4)
         email_e = key_e = None
         for txt in ("Email Address:", "License Key:"):
@@ -158,7 +162,9 @@ def _sp_expired_dialog():
             else: sv.set("❌  Invalid license key.")
         tk.Button(root, text="  Activate License  ", font=f_l, bg="#6366f1", fg="#ffffff",
                   relief="flat", cursor="hand2", command=activate).pack(pady=14)
-        tk.Label(root, text="www.maxtechfix.com", font=f_l, bg="#0f172a", fg="#475569").pack(pady=(0,10))
+        tk.Label(root,
+                 text=f"To register:  {_SP_CONTACT}",
+                 font=f_l, bg="#0f172a", fg="#475569").pack(pady=(0,10))
         root.mainloop()
     except Exception: pass
     return result[0]
