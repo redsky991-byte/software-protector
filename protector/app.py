@@ -767,7 +767,7 @@ class SoftwareProtectorApp(tk.Tk):
             "Consider adding server-side license validation for critical applications.",
         ])
 
-        _label(sf, "Need help?  Contact: Zulfiqar Ali  |  www.maxtechfix.com",
+        _label(sf, "Need help or want to register?  WhatsApp: 00923411337788  |  Email: redsky991@hotmail.com",
                size=10, color=C["muted"]).pack(pady=(20, 30))
 
     # 6. About ─────────────────────────────────────────────────────────────────
@@ -807,17 +807,27 @@ class SoftwareProtectorApp(tk.Tk):
                color=C["accent"]).pack(anchor="w", pady=(0, 12))
 
         rows = [
-            ("Name:",    "Zulfiqar Ali"),
-            ("Company:", "MaxTechFix"),
-            ("Website:", "www.maxtechfix.com"),
-            ("Email:",   "contact@maxtechfix.com"),
+            ("Name:",      "Zulfiqar Ali"),
+            ("Company:",   "MaxTechFix"),
+            ("Website:",   "www.maxtechfix.com"),
+            ("Email:",     "contact@maxtechfix.com"),
+            (None, None),
+            ("📋 Registration Contact", None),
+            ("WhatsApp:",  "00923411337788"),
+            ("Email:",     "redsky991@hotmail.com"),
         ]
         for label, value in rows:
+            if label is None:
+                _divider(di).pack(fill="x", pady=(8, 4))
+                continue
             row = tk.Frame(di, bg=C["panel"])
             row.pack(fill="x", pady=4)
-            _label(row, label, size=10, color=C["muted"], bg=C["panel"],
-                   width=12, anchor="w").pack(side="left")
-            _label(row, value, size=10, weight="bold", bg=C["panel"]).pack(side="left")
+            is_section = (value is None)
+            _label(row, label, size=10,
+                   color=C["accent"] if is_section else C["muted"],
+                   bg=C["panel"], width=12, anchor="w").pack(side="left")
+            if value:
+                _label(row, value, size=10, weight="bold", bg=C["panel"]).pack(side="left")
 
         # Features card
         feat_card = _card(p)
